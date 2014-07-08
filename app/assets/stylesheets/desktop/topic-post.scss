@@ -1,5 +1,5 @@
 .gap {
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: scale-color-diff();
   padding: 5px 0;
   color: lighten($primary, 35%);
   cursor: pointer;
@@ -7,7 +7,7 @@
   width: 80%;
 
   &:hover {
-    background-color: scale-color($primary, $lightness: 90%);
+    background-color: scale-color-diff();
   }
 
   @include medium-width {
@@ -32,6 +32,7 @@
 
 h1 .topic-statuses .topic-status i {
   font-size: 20px;
+  vertical-align: middle;
 }
 
 .logo-small {
@@ -51,17 +52,17 @@ h1 .topic-statuses .topic-status i {
 
 .reply-to-tab {
   position: absolute;
-  right: 330px;
+  right: 430px;
   z-index: 400;
   padding: 13px 6px 5px;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid scale-color-diff();
   font-size: 12px;
   color: scale-color($primary, $lightness: 50%);
   @include medium-width {
-    right: 300px;
+    right: 320px;
   }
   @include small-width {
-    right: 230px;
+    right: 280px;
   }
 }
 
@@ -76,7 +77,7 @@ h1 .topic-statuses .topic-status i {
   }
 }
 
-section.post-menu-area, .post-actions {
+div.actions, .post-actions {
     .discourse-no-touch & {
       opacity: 0.2;
        transition: opacity linear 0.4s;
@@ -85,7 +86,7 @@ section.post-menu-area, .post-actions {
     .discourse-touch & {opacity: 1;}
   }
 
-  &:hover section.post-menu-area, &:hover .post-actions {
+  &:hover div.actions, &:hover .post-actions {
     opacity: 1;
 
   }
@@ -96,6 +97,10 @@ section.post-menu-area, .post-actions {
         opacity:1;
       }
     }
+}
+
+section.post-menu-area {
+  position: relative;
 }
 
 nav.post-controls {
@@ -110,14 +115,24 @@ nav.post-controls {
     transition: all linear 0.15s;
   }
 
+  .actions {
+    text-align: right;
+    float: right;
+    display: inline-block;
+    .more-actions {
+      display: none;
+      overflow: hidden;
+    }
+  }
+
   .show-replies {
-    background: scale-color($primary, $lightness: 95%);
+    background: scale-color-diff();
     padding: 8px 15px;
     padding-bottom: 20px;
     margin-left: 0;
     span.badge-posts {color: scale-color($primary, $lightness: 60%);}
     &:hover {
-      background: lighten($primary, 76%);
+      background: scale-color-diff();
       span.badge-posts {color: $primary;}
     }
     i {
@@ -157,7 +172,7 @@ nav.post-controls {
     margin-left: 3px;
     transition: all linear 0.15s;
          &:hover {
-          background: scale-color($primary, $lightness: 90%);
+          background: scale-color-diff();
           color: $primary;
         }
 
@@ -170,9 +185,6 @@ nav.post-controls {
         }
         &.admin {
           position: relative;
-        }
-        &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create, &.admin {
-          float: right;
         }
 
         &.delete:hover {
@@ -211,7 +223,7 @@ nav.post-controls {
     background-color: $secondary;
     width: 205px;
     padding: 10px;
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid scale-color-diff();
     position: absolute;
     text-align: left;
     bottom: 0;
@@ -244,41 +256,44 @@ nav.post-controls {
 
 .embedded-posts {
   h1, h2, h3 {margin: 10px 0;}
-  a.mention {background: scale-color($primary, $lightness: 90%);}
+  a.mention {background: darken(scale-color-diff(), 10%);}
+
+  .topic-body { width: 610px; border: none; }
+
+  // bottom means "reply expansion" below a post
   &.bottom {
     &.hidden {display: block; opacity: 0; }
-
   }
   &.bottom .arrow {float: right; margin: 0 0 0 0;}
-  &.top {
+  &.bottom { margin-top: -11px;}
 
+  // top means "in reply to expansion" above a post
+  &.top {
     margin-left: 66px;
     max-width: 713px;
-
     @include medium-width {
     margin-left: 59px;
     }
-
     @include small-width {
     margin-left: 57px;
     max-width: 720px;
     }
   }
-  &.top.span14 {padding-left: 0;}
-    .topic-body, .topic-avatar {border: none;}
-    .topic-avatar {padding-left: 15px;}
+  &.top.topic-body {padding-left: 0;}
+    .topic-avatar {border: none; padding-left: 15px;}
     .post-date {color: scale-color($primary, $lightness: 50%);}
     .fa-arrow-up {margin-left: 5px;}
-    .row {border-top: 1px solid scale-color($primary, $lightness: 90%); padding-top: 7px;}
+    .row {border-top: 1px solid darken(scale-color-diff(), 10%); padding-top: 7px;}
     .reply:first-of-type .row {border-top: none;}
+    .quote {margin-top: 0 !important;}
+  background: scale-color-diff();
 
-  background: scale-color($primary, $lightness: 95%);
   .quote .title, blockquote, .onebox, .onebox-result {
-    background: scale-color($primary, $lightness: 90%);
-    border-left: 5px solid scale-color($primary, $lightness: 75%);
+    background: darken(scale-color-diff(), 5%);
+    border-left: 5px solid darken(scale-color-diff(), 12%);
   }
 
-  &.bottom { margin-top: -11px;}
+
   .topic-meta-data {
     position: relative;
   }
@@ -295,14 +310,12 @@ nav.post-controls {
 }
 
 .bottom-round nav.post-controls .show-replies {
-background: scale-color($primary, $lightness: 95%);
-margin-bottom: 0;
-padding-bottom: 8px;
-  &:hover {background: scale-color($primary, $lightness: 90%);
+  background: scale-color-diff();
+  margin-bottom: 0;
+  padding-bottom: 8px;
+  &:hover {background: scale-color-diff();
   }
 }
-
-
 
 .post-action {
   .relative-date {
@@ -322,14 +335,10 @@ a.star {
 
 .topic-map {
   margin: 20px 0 0 0;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  background: scale-color(scale-color-diff(), $lightness: 40%);
 
   .buttons .btn {
     &:hover {border: 1px solid $primary !important;}
-  }
-
-  .topic-links li {
-    word-wrap: break-word;
   }
 
   h3 {
@@ -339,11 +348,12 @@ a.star {
   }
 
   h4 {
-    margin: 0 0 3px 0;
-    color: $primary;
+    margin: 1px 0 2px 0;
+    color: scale-color($primary, $lightness: 50%);
     font-weight: normal;
     font-size: 12px;
     line-height: 15px;
+    text-transform: lowercase;
   }
 
   p,
@@ -361,8 +371,6 @@ a.star {
     color: scale-color($primary, $lightness: 50%);
   }
 
-
-
   .avatars {
     > div {
       float: left;
@@ -377,7 +385,11 @@ a.star {
       font-weight: normal;
       font-size: 11px;
       line-height: 14px;
-          }
+    }
+
+    /* limit to one line of avatars for now */
+    height:30px;
+    overflow:hidden;
   }
 
   .avatar {
@@ -386,12 +398,14 @@ a.star {
   }
 
   .map {
+    .secondary {text-align: center;}
     li {
       float: left;
       padding: 7px 11px;
       &:last-of-type {
         border-right: 0;
       }
+      &:nth-child(3) { text-align:center; }
     }
     a, .number {
       line-height: 20px;
@@ -406,33 +420,35 @@ a.star {
   .avatars,
   .links,
   .information {
-    padding: 7px 14px;
+    padding: 7px 10px;
     color: $primary;
   }
   .information {
-    border-top: 1px solid scale-color($primary, $lightness: 90%);
+    border-top: 2px solid scale-color-diff();
   }
 
-.participants { // PMs //
-  .user {float: left; margin: 7px 20px 7px 0;}
-}
+  .participants { // PMs //
+    .user {float: left; margin: 7px 20px 7px 0;}
+  }
 
   .topic-links {
-    li > a {
-      margin-left: 5px;
-    }
     .badge-notification {
-      margin: 0 0 4px;
+      margin: 1px 5px 2px 0;
     }
   }
+
+  td {
+    vertical-align: top;
+  }
+
   .buttons {
     float: right;
     .btn {
       border: 0;
-      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+      border-bottom: 1px solid scale-color-diff();
       padding: 0 23px;
       color: $primary;
-      background: scale-color($primary, $lightness: 90%);
+      background: scale-color-diff();
       &:hover {
         background: scale-color($primary, $lightness: 75%);
         color: $primary;
@@ -460,17 +476,20 @@ a.star {
     line-height: 32px;
     color: $primary;
   }
-
+  .btn {
+    margin-bottom: 5px;
+    margin-right: 10px;
+    .fa-star {margin-right: 5px;}
+  }
 }
 
 #suggested-topics {
   clear: left;
   padding: 20px 0 15px 0;
   #topic-list > tbody > tr:nth-child(even) {
-    background-color: scale-color($primary, $lightness: 97%);
+    background-color: darken($secondary, 3%);
   }
   #topic-list > tbody > tr:nth-child(odd) {
-    background-color: $secondary;
   }
   table {
     box-shadow: none;
@@ -491,14 +510,6 @@ span.post-count {
 
 button.expand-post {
   margin-top: 10px;
-}
-
-#topic-footer-buttons {
-  .btn {
-    margin-bottom: 5px;
-    margin-right: 10px;
-    .fa-star {margin-right: 5px;}
-  }
 }
 
 .quote-button {
@@ -525,34 +536,44 @@ iframe {
 
 .extra-info-wrapper {
   float: left;
-  width: 78%;
-  max-width: 800px;
+  width: 76%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   .topic-statuses {
     i         { color: $header_primary; }
     .unpinned { color: $header_primary; }
   }
-  .topic-link { color: $header_primary; }
+  .topic-link { color: $header_primary;
+  display: block;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+
+  }
 }
 
 
 @include medium-width {
   .extra-info-wrapper {
-  max-width: 740px;
+  width: 73%;
 }
 }
 
 
 @include small-width {
     .extra-info-wrapper {
-  max-width: 680px;
+  width: 70%;
 }
 }
 
 .extra-info {
   h1 {
     margin: 5px 0 0 0;
-    font-size: 1.8em;
-    line-height: 1.2em;
+    font-size: 1.6em;
+    line-height: 1.3em;
+
   }
 
   a.star {
@@ -567,7 +588,9 @@ iframe {
 
   .badge-category {
     vertical-align: top;
-    margin-top: 4px;
+    margin-top: 2px;
+    float: left;
+    margin-right: 5px;
   }
 
 }
@@ -576,12 +599,7 @@ iframe {
   display: block;
 }
 
-.dropdown-menu li  {
-  margin: 5px 0;
-}
-
 .btn-group {
-  margin-top: 25px;
   position: relative;
 }
 
@@ -590,22 +608,10 @@ iframe {
   position: relative;
 }
 
-.contents .cooked a {
-  word-wrap: break-word;
-}
-
-.contents .cooked {
-  margin-right: 30px;
-  word-wrap: break-word;
-
-  h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
-
-}
-
   a.mention {
     padding: 2px 4px;
     color: $primary;
-    background: scale-color($primary, $lightness: 90%);
+    background: scale-color-diff();
   }
 
 
@@ -632,18 +638,8 @@ iframe {
 }
 
 #share-link {
-  width: 265px;
+  width: 365px;
   margin-left: -4px;
-
-    h3 {
-      margin: 5px 0;
-    }
-
-    input[type=text] {
-      font-size: 16px;
-      width: 92%;
-      margin-bottom: 10px;
-    }
 }
 
 .post-select {
@@ -673,31 +669,54 @@ iframe {
 }
 
 
-blockquote { /* solo quotes */
-  margin: 14px 0;
+/* solo quotes */
+blockquote {
+  /* leave browser defaults for top and bottom here */
+  margin-left: 0;
+  margin-right: 0;
   padding: 12px;
-
-    a.mention {background: scale-color($primary, $lightness: 90%);}
-    p:first-of-type {margin-top: 0;}
-    p:last-of-type {margin-bottom: 0;}
+  a.mention {background: darken(scale-color-diff(), 10%);}
 }
 
-.quote { /* quotes with attribution */
-  margin-top: 14px;
-  blockquote {margin-top: 0; padding-top: 0;
-  .onebox-result {background-color: $primary;}
+// we assume blockquotes have their own margins, so all blockquotes
+// will remove margins from first (top) and last (bottom) child elements
+blockquote > *:first-child {
+  margin-top: 0 !important;
+}
+blockquote > *:last-child {
+  margin-bottom: 0 !important;
+}
 
 
+/* quotes with attribution */
+.quote {
+  &>blockquote {
+    margin-top: 0;
+    padding-top: 0;
+    .onebox-result {
+      background-color: scale-color-diff();
+    }
   }
 
   .title {
-  border-left: 5px solid scale-color($primary, $lightness: 75%);
-  background-color: scale-color($primary, $lightness: 95%);
-  padding: 12px;
-  .avatar { margin-right: 7px; }
-  img {margin-top: -4px;}
+    border-left: 5px solid darken(scale-color-diff(), 10%);
+    background-color: scale-color-diff();
+    padding: 12px;
+    .avatar { margin-right: 7px; }
+    img { margin-top: -4px; }
+  }
 
-}
+  aside {
+    .quote, .title, blockquote, .onebox, .onebox-result {
+      background: darken(scale-color-diff(), 5%);
+      border-left: 5px solid darken(scale-color-diff(), 12%);
+    }
+
+    aside.quote>blockquote, aside.quote>.title {
+      border-left: 0;
+    }
+  }
+
 }
 
 .quote-controls {
@@ -725,10 +744,12 @@ blockquote { /* solo quotes */
 
 .gutter {
   float: left;
+  width: 19%;
   margin-top: 15px;
-      ul {margin: 0;}
-      padding-left: 10px;
+  padding-left: 15px;
 
+  ul {margin: 0;}
+  li {margin-bottom: 10px;}
   i {font-size: 12px;}
 
   .post-links {
@@ -749,58 +770,45 @@ blockquote { /* solo quotes */
       display: block;
       text-align: right;
     }
-    li {margin-bottom: 10px;}
+
   }
 }
 
 .topic-body {
+  width: 695px;
   float: left;
   position: relative;
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid scale-color-diff();
   padding: 12px 0 15px 0;
   &.highlighted {
     background-color: scale-color($tertiary, $lightness: 85%);
   }
-  img, svg {
+  img:not(.avatar), svg {
     max-width: 100%;
   }
 }
 .topic-avatar {
- border-top: 1px solid scale-color($primary, $lightness: 90%);
+ border-top: 1px solid scale-color-diff();
  padding-top: 16px;
+ width: 55px;
+ float: left;
 
-  .wiki {
-    margin-top: 14px;
-    color: scale-color($primary, $lightness: 60%);
-  }
-}
-
-.bottom-round.contents.regular {
-  -webkit-transition: background-color .25s linear;
-  transition: background-color .25s linear;
+ .wiki {
+   margin-top: 14px;
+   color: scale-color($primary, $lightness: 60%);
+   margin-left: 5px;
+ }
 }
 
 .posts-wrapper {
   position: relative;
 }
 
-//columns
-
-.span14 { width: 70%; } //main content
-.span2 {width: 6%; }
-.span11 {width: 86%; padding-left: 2%;}
-.span5 {width: 19%; padding-left: 1%; }
-
-
-@media screen and (max-width: 966px) {
-  .gutter {display: none;}
-  .span14 { width: 80%; max-width: 720px; } //main content
+.row:before, .row:after {
+  display: table;
+  content: "";
 }
-
-.row:before, .row:after {display: table; content: "";}
 .row:after {clear: both;}
-
-
 
 .dropdown {
   position: relative;
@@ -824,19 +832,18 @@ blockquote { /* solo quotes */
   display: none;
   float: left;
   width: 550px;
-  padding: 4px 0;
   margin: 1px 0 0;
   list-style: none;
   background-color: $secondary;
-  border: 1px solid scale-color($primary, $lightness: 90%);
+  border: 1px solid scale-color-diff();
   box-shadow: 0 1px 5px rgba($primary, .4);
   background-clip: padding-box;
   span {font-size: 12px;}
-.title {font-weight: bold; display: block; font-size: 14px;}
+  .title {font-weight: bold; display: block; font-size: 14px;}
 }
 .dropdown-menu a {
   display: block;
-  padding: 3px 15px;
+  padding: 9px;
   clear: both;
   font-weight: normal;
   line-height: 18px;
@@ -849,16 +856,17 @@ blockquote { /* solo quotes */
 .dropdown-menu li > a:hover,
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-  color: $secondary;
+  color: $primary;
   text-decoration: none;
-  background-color: scale-color($tertiary, $lightness: 50%);
+  background-color: scale-color($highlight, $lightness: 60%);
+
 }
 
 .dropdown-menu .disabled > a,
 .dropdown-menu .disabled > a:hover {
   text-decoration: none;
   color: $primary;
-  background-color: scale-color($highlight, $lightness: 25%);
+  background-color: scale-color($tertiary, $lightness: 90%);
   cursor: default;
 }
 
@@ -982,8 +990,8 @@ blockquote { /* solo quotes */
         background-color: scale-color($primary, $lightness: 70%);
         border-top: 1px solid $tertiary;
         border-left: 1px solid $tertiary;
-        border-bottom: 1px solid scale-color($primary, $lightness: 90%);
-        border-right: 1px solid scale-color($primary, $lightness: 90%);
+        border-bottom: 1px solid scale-color-diff();
+        border-right: 1px solid scale-color-diff();
         color: $primary;
       }
     }
@@ -1004,9 +1012,9 @@ a.attachment:before {
 .private_message .gutter:before, .deleted-topic .gutter:before, .read_restricted .gutter:before {
     display: block;
     position: absolute;
-    top: 0;
+    top: -10px;
     left: 10px;
-    color: scale-color($primary, $lightness: 90%);
+    color: scale-color-diff();
     font: 90px/1 FontAwesome;
     content: "\f05c";
     z-index: -5;
@@ -1021,7 +1029,6 @@ a.attachment:before {
 }
 
 .topic-meta-data {
- margin-bottom: 10px;
 
  &:after {
     visibility: hidden;
@@ -1048,4 +1055,18 @@ span.highlighted {
 
 .username.new-user a {
   color: scale-color($primary, $lightness: 70%);
+}
+
+.read-state {
+  color: scale-color($tertiary, $lightness: 50%);
+  position: absolute;
+  right: -8px;
+  top: 13px;
+  font-size: 8px;
+}
+
+.read-state.read {
+  opacity: 0;
+  -webkit-transition: opacity 1s ease-out;
+  transition: opacity 1s ease-out;
 }

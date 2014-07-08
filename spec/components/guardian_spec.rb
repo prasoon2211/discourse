@@ -232,12 +232,22 @@ describe Guardian do
       Guardian.new(user).can_invite_to_forum?.should be_false
     end
 
+    it 'returns false when the local logins are disabled' do
+      SiteSetting.stubs(:enable_local_logins).returns(false)
+      Guardian.new(user).can_invite_to_forum?.should be_false
+      Guardian.new(moderator).can_invite_to_forum?.should be_false
+    end
+
   end
 
   describe 'can_invite_to?' do
+    let(:group) { Fabricate(:group) }
+    let(:category) { Fabricate(:category, read_restricted: true) }
     let(:topic) { Fabricate(:topic) }
+    let(:private_topic) { Fabricate(:topic, category: category) }
     let(:user) { topic.user }
     let(:moderator) { Fabricate(:moderator) }
+    let(:admin) { Fabricate(:admin) }
 
     it 'handles invitation correctly' do
       Guardian.new(nil).can_invite_to?(topic).should be_false
@@ -254,6 +264,20 @@ describe Guardian do
     it 'returns false when the site requires approving users and is regular' do
       SiteSetting.expects(:must_approve_users?).returns(true)
       Guardian.new(coding_horror).can_invite_to?(topic).should be_false
+    end
+
+    it 'returns false when local logins are disabled' do
+      SiteSetting.stubs(:enable_local_logins).returns(false)
+      Guardian.new(moderator).can_invite_to?(topic).should be_false
+      Guardian.new(user).can_invite_to?(topic).should be_false
+    end
+
+    it 'returns false for normal user on private topic' do
+      Guardian.new(user).can_invite_to?(private_topic).should be_false
+    end
+
+    it 'returns true for admin on private topic' do
+      Guardian.new(admin).can_invite_to?(private_topic).should be_true
     end
 
   end
@@ -414,6 +438,8 @@ describe Guardian do
         SiteSetting.stubs(:min_trust_to_create_topic).returns(1)
         Guardian.new(build(:user, trust_level: 1)).can_create?(Topic,Fabricate(:category)).should be_true
         Guardian.new(build(:user, trust_level: 2)).can_create?(Topic,Fabricate(:category)).should be_true
+        Guardian.new(build(:admin, trust_level: 0)).can_create?(Topic,Fabricate(:category)).should be_true
+        Guardian.new(build(:moderator, trust_level: 0)).can_create?(Topic,Fabricate(:category)).should be_true
       end
     end
 
@@ -623,6 +649,24 @@ describe Guardian do
       end
 
       it 'returns true if you want to edit your own post' do
+        Guardian.new(post.user).can_edit?(post).should be_true
+      end
+
+      it "returns false if the post is hidden due to flagging and it's too soon" do
+        post.hidden = true
+        post.hidden_at = Time.now
+        Guardian.new(post.user).can_edit?(post).should be_false
+      end
+
+      it "returns true if the post is hidden due to flagging and it been enough time" do
+        post.hidden = true
+        post.hidden_at = (SiteSetting.cooldown_minutes_after_hiding_posts + 1).minutes.ago
+        Guardian.new(post.user).can_edit?(post).should be_true
+      end
+
+      it "returns true if the post is hidden due to flagging and it's got a nil `hidden_at`" do
+        post.hidden = true
+        post.hidden_at = nil
         Guardian.new(post.user).can_edit?(post).should be_true
       end
 
@@ -1725,4 +1769,3 @@ describe Guardian do
     end
   end
 end
-

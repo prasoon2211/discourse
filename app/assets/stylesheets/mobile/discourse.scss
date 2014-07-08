@@ -6,27 +6,13 @@ body {
   background-color: $secondary;
 }
 
-.container {
-  @extend .clearfix;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.full-width {
-  margin-left: 12px;
-}
-
 body {
 
   .boxed {
     height: 100%;
     @include border-radius-all(5px);
     .contents {
-      float: left;
       padding: 10px 10px 10px 10px;
-      h3 {
-        float: left;
-      }
     }
     &.white {
       background-color: $secondary;
@@ -38,10 +24,9 @@ body {
     }
     a.star {
       display: inline-block;
-      font-size: 15px;
-      line-height: 1;
+      font-size: 20px;
       color: scale-color($primary, $lightness: 75%);
-      margin-right: 3px;
+      margin-right: 8px;
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
@@ -87,15 +72,11 @@ body {
       }
     }
   }
-
-
 }
 
 blockquote {
   /* 13px left is intentional here to properly align with post quotes */
   padding: 10px 8px 10px 13px;
-  background-color: scale-color($primary, $lightness: 95%);
-  border-left: 5px solid scale-color($primary, $lightness: 75%);
   p {
     margin: 0 0 10px 0;
   }
@@ -108,12 +89,20 @@ blockquote {
   display: inline-block;
   margin: 0;
   padding: 0;
+  vertical-align: middle;
   .topic-status {
     margin: 0;
     display: inline-block;
     i {
-      font-size: 15px;
+      font-size: 20px;
       color: darken($secondary, 60%);
     }
   }
+}
+
+// Styles used before the user is logged into discourse. For example, activating their
+// account or changing their email.
+
+#simple-container {
+  width: 90%;
 }

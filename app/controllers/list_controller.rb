@@ -267,7 +267,10 @@ class ListController < ApplicationController
       category: params[:category],
       order: params[:order],
       ascending: params[:ascending],
-      status: params[:status]
+      min_posts: params[:min_posts],
+      max_posts: params[:max_posts],
+      status: params[:status],
+      search: params[:search]
     }
     options[:no_subcategories] = true if params[:no_subcategories] == 'true'
 

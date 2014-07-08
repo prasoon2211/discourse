@@ -7,16 +7,23 @@
   @module Discourse
 **/
 export default Discourse.ObjectController.extend({
+  layoutClass: function(){
+    var ub = this.get("userBadges");
+    if(ub && ub[0] && ub[0].post_id){
+      return "user-badge-with-posts";
+    } else {
+      return "user-badge-no-posts";
+    }
+  }.property("userBadges"),
+
   grantDates: Em.computed.mapBy('userBadges', 'grantedAt'),
   minGrantedAt: Em.computed.min('grantDates'),
 
-  moreUserCount: function() {
+  canLoadMore: function() {
     if (this.get('userBadges')) {
-      return this.get('model.grant_count') - this.get('userBadges.length');
+      return this.get('model.grant_count') > this.get('userBadges.length');
     } else {
-      return 0;
+      return false;
     }
-  }.property('model.grant_count', 'userBadges.length'),
-
-  showMoreUsers: Em.computed.gt('moreUserCount', 0)
+  }.property('model.grant_count', 'userBadges.length')
 });

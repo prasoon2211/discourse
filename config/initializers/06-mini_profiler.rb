@@ -22,9 +22,12 @@ if defined?(Rack::MiniProfiler)
     (path !~ /^\/message-bus/) &&
     (path !~ /topics\/timings/) &&
     (path !~ /assets/) &&
+    (path !~ /\/user_avatar\//) &&
+    (path !~ /\/letter_avatar\//) &&
     (path !~ /qunit/) &&
     (path !~ /srv\/status/) &&
     (path !~ /commits-widget/) &&
+    (path !~ /^\/cdn_asset/) &&
     (path !~ /^\/logs/)
   end
 

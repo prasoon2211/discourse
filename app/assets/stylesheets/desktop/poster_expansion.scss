@@ -5,7 +5,7 @@
   width: 460px;
   left: 20px;
   z-index: 990;
-  box-shadow: 0 2px 6px scale-color($primary, $lightness: 90%);
+  box-shadow: 0 2px 6px scale-color-diff();
   margin-top: -2px;
   background-color: $secondary;
   padding: 12px 12px 5px 12px;
@@ -13,20 +13,27 @@
   h1 {
     display: inline-block;
     min-width: 120px;
-    font-size: 30px;
-    line-height: 33px;
-    margin-bottom: 8px;
-
+    font-size: 25px;
+    line-height: 1.25;
+    display: block;
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     a {
       color: $primary;
     }
   }
 
   h2 {
-    font-size: 20px;
-    line-height: 22px;
+    font-size: 15px;
+    line-height: 1.25;
     font-weight: normal;
-    margin-bottom: 5px;
+    display: block;
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     a {
       color: $primary;
@@ -37,7 +44,7 @@
     font-size: 13px;
     font-weight: normal;
     margin-top: 0;
-    color: $primary;
+    color: scale-color($primary, $lightness: 50%);
   }
   .groups {
     font-size: 13px;
@@ -51,15 +58,25 @@
   }
 
   .metadata {
-    float: right;
+    position: absolute;
+    right: 20px;
+    top: 10px;
     max-width: 180px;
     text-align: right;
-    margin-top: 5px;
   }
 
   .bottom {
     clear: both;
     padding-top: 10px;
+  }
+
+  .bio {
+    max-height: 100px;
+    overflow: auto;
+    margin-bottom: 10px;
+    img {
+      max-width: 100%;
+    }
   }
 
   img.avatar {
@@ -92,16 +109,12 @@
       float: left;
     }
 
-
-
-    h2 {
-      line-height: 12px;
-    }
-
     .badge-section {
-      margin-top: 20px;
+      margin-top: 10px;
+      float: left;
+      width: 300px;
+
       h3 {
-        line-height: 43px;
         color: $primary;
         font-size: 14px;
         margin-bottom: -8px;
@@ -110,7 +123,8 @@
 
     .more-user-badges {
       @extend .user-badge;
-      padding: 4px 8px;
+      padding: 3px 8px;
+      font-size: 13px;
     }
   }
 }

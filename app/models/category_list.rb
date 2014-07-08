@@ -57,12 +57,18 @@ class CategoryList
       @categories = Category
                         .includes(:featured_users, subcategories: [:topic_only_relative_url])
                         .secured(@guardian)
+
+      if @options[:parent_category_id].present?
+        @categories = @categories.where('categories.parent_category_id = ?', @options[:parent_category_id].to_i)
+      end
+
       if SiteSetting.fixed_category_positions
         @categories = @categories.order('position ASC').order('id ASC')
       else
         @categories = @categories.order('COALESCE(categories.posts_week, 0) DESC')
                                  .order('COALESCE(categories.posts_month, 0) DESC')
                                  .order('COALESCE(categories.posts_year, 0) DESC')
+                                 .order('id ASC')
       end
 
       if latest_post_only?
@@ -70,27 +76,29 @@ class CategoryList
       end
 
       @categories = @categories.to_a
-      subcategories = {}
-      to_delete = Set.new
-      @categories.each do |c|
-        if c.parent_category_id.present?
-          subcategories[c.parent_category_id] ||= []
-          subcategories[c.parent_category_id] << c.id
-          to_delete << c
-        end
-      end
-
-      if subcategories.present?
+      if @options[:parent_category_id].blank?
+        subcategories = {}
+        to_delete = Set.new
         @categories.each do |c|
-          c.subcategory_ids = subcategories[c.id]
+          if c.parent_category_id.present?
+            subcategories[c.parent_category_id] ||= []
+            subcategories[c.parent_category_id] << c.id
+            to_delete << c
+          end
         end
-        @categories.delete_if {|c| to_delete.include?(c) }
+
+        if subcategories.present?
+          @categories.each do |c|
+            c.subcategory_ids = subcategories[c.id]
+          end
+          @categories.delete_if {|c| to_delete.include?(c) }
+        end
       end
 
       if latest_post_only?
         @all_topics = []
         @categories.each do |c|
-          if c.latest_post && c.latest_post.topic
+          if c.latest_post && c.latest_post.topic && @guardian.can_see?(c.latest_post.topic)
             c.displayable_topics = [c.latest_post.topic]
             topic = c.latest_post.topic
             topic.include_last_poster = true # hint for serialization
@@ -106,7 +114,7 @@ class CategoryList
             c.displayable_topics = []
             topics_in_cat.each do |topic_id|
               topic = @topics_by_id[topic_id]
-              if topic.present?
+              if topic.present? && @guardian.can_see?(topic)
                 topic.category = c
                 c.displayable_topics << topic
               end

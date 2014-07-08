@@ -80,8 +80,12 @@ module PostGuardian
       return true
     end
 
-    if is_my_own?(post) && !post.edit_time_limit_expired?
-      return true
+    if is_my_own?(post)
+      return false if post.hidden? &&
+                      post.hidden_at.present? &&
+                      post.hidden_at >= SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
+
+      return !post.edit_time_limit_expired?
     end
 
     false
@@ -131,7 +135,10 @@ module PostGuardian
 
   def can_view_post_revisions?(post)
     return false unless post
-    return true if SiteSetting.edit_history_visible_to_public && !post.hidden
+
+    if !post.hidden
+      return true if post.wiki || SiteSetting.edit_history_visible_to_public
+    end
 
     authenticated? &&
     (is_staff? || @user.has_trust_level?(:elder) || @user.id == post.user_id) &&

@@ -21,6 +21,10 @@ class DiscourseSassCompiler
   def initialize(scss, target)
     @scss = scss
     @target = target
+
+    unless Sass::Script::Functions < Sprockets::SassFunctions
+      Sass::Script::Functions.send :include, Sprockets::SassFunctions
+    end
   end
 
   # Compiles the given scss and output the css as a string.
@@ -39,17 +43,23 @@ class DiscourseSassCompiler
 
     context = env.context_class.new(env, "#{@target}.scss", "app/assets/stylesheets/#{@target}.scss")
 
+    debug_opts = Rails.env.production? ? {} : {
+      line_numbers: true,
+      # debug_info: true, # great with Firebug + FireSass, but not helpful elsewhere
+      style: :expanded
+    }
+
     ::Sass::Engine.new(@scss, {
       syntax: :scss,
       cache: false,
       read_cache: false,
-      style: Rails.env.production? ? :compressed : :expanded,
+      style: :compressed,
       filesystem_importer: opts[:safe] ? DiscourseSafeSassImporter : DiscourseSassImporter,
       sprockets: {
         context: context,
         environment: context.environment
       }
-    }).render
+    }.merge(debug_opts)).render
   end
 
 end

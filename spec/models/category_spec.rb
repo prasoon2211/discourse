@@ -9,7 +9,7 @@ describe Category do
 
   it 'validates uniqueness of name' do
     Fabricate(:category)
-    should validate_uniqueness_of(:name)
+    should validate_uniqueness_of(:name).scoped_to(:parent_category_id)
   end
 
   it { should belong_to :topic }
@@ -19,6 +19,14 @@ describe Category do
   it { should have_many :category_featured_topics }
   it { should have_many :featured_topics }
   it { should belong_to :parent_category}
+
+  describe "last_updated_at" do
+    it "returns a number value of when the category was last updated" do
+      last = Category.last_updated_at
+      last.should be_present
+      last.to_i.should == last
+    end
+  end
 
   describe "resolve_permissions" do
     it "can determine read_restricted" do

@@ -3,7 +3,7 @@
 # Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-pt-br/
+# https://www.transifex.com/projects/p/discourse-org/
 
 ja:
   dates:
@@ -481,7 +481,6 @@ ja:
     enable_noscript_support: "noscript タグ経由でアクセスしてきた標準サーチエンジンクローラのサポートを有効にする"
     top_menu: "ホームページナビゲーションに表示する項目を指定。例 latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "ポストメニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
-    share_links: "シェアダイアログに表示する項目を指定。例 twitter|facebook|google+|email"
     track_external_right_clicks: "右クリックされた外部リンクをトラックする (例: 新しいタブで開く)。URL のリライトを要するためデフォルトでは無効化されています"
     topics_per_page: "トピックリストページに表示されるトピック数のデフォルト"
     posts_per_page: "トピックページに表示されるポスト数のデフォルト (さらにポストを読み込んだ際にもこの数を適用)"
@@ -500,7 +499,6 @@ ja:
     invite_only: "一般登録を無効化し、招待されたユーザのみ登録可能にする"
     login_required: "ポストを読むのにログインを必須にする"
     enable_local_logins: "従来型のローカルユーザ名とパスワードによる認証を有効にする"
-    enable_google_logins: "Google 認証を有効にする"
     enable_yahoo_logins: "Yahoo 認証を有効にする"
     enable_twitter_logins: "Twitter 認証を有効にする (twitter_consumer_key と twitter_consumer_secret の設定が必要)"
     twitter_consumer_key: "Twitter 認証用の consumer key。http://dev.twitter.com で入手可能"
@@ -610,7 +608,6 @@ ja:
   search:
     types:
       category: 'カテゴリ'
-      topic: 'トピック'
       user: 'ユーザ'
   original_poster: "Original Poster"
   most_posts: "Most Posts"
@@ -653,8 +650,6 @@ ja:
     omniauth_error_unknown: "ログインに失敗しました。もう一度試してください。"
   user:
     username:
-      short: "は %{min} 文字より長い必要があります"
-      long: "は %{max} 文字より短い必要があります"
       characters: "は英数字のみである必要があります"
       unique: "はユニークである必要があります"
       blank: "は空であってはなりません"
@@ -664,72 +659,8 @@ ja:
       blocked: "は許可されていません。"
     ip_address:
       blocked: "はブロックされてます。"
-  invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} が %{site_name} のディスカッションにあなたを招待しています"
-    text_body_template: |
-      %{invitee_name} が %{site_name} の "%{topic_title}" トピックにあなたを招待しています。
-
-      もしよろしければ、以下のリンクよりディスカッションをご確認ください:
-
-      [Visit %{site_name}][1]
-
-      もしトラステッドユーザより招待された場合は、ログインすることなくすぐに回答を投稿することができます。
-
-      [1]: %{invite_link}
-  invite_forum_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} が %{site_name} にあたなを招待しています"
-    text_body_template: |
-      %{invitee_name} が %{site_name} にあなたを招待しています。
-
-      もしよろしければ、以下のリンクをクリックして参加してください:
-
-      [Visit %{site_name}][1]
-
-      もしトラステッドユーザより招待された場合は、ログインすることなくすぐに参加することができます。
-
-      [1]: %{invite_link}
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
-    text_body_template: |
-      これは、あなたの %{site_name} フォーラムより送信されたテストメールです:
-
-      [**%{base_url}**][0]
-
-      メール到達性の担保は複雑です。チェックする必要があるいくつかのポイントを以下にまとめます:
-
-      - メールクライアントで*メールの raw ソース*を見る方法を確認する。これはメールヘッダより重要なヒントを得るために必要です。Gmail の場合、メールのドロップダウンリストより "メッセージのソースを表示" オプションを選択することで確認ができます。
-
-      - **重要:** ISP が、メール送信元のドメイン名と IP アドレスを関連付けるリバース DNS レコードを正しく管理しているか確認してください。[こちらでリバース PTR レコードの確認ができます][2]。ISP が正しいリバース DNS ポインタレコードを管理していない場合、メール送信が失敗する可能性が非常に高くなります。
-
-      - ドメインの SPF レコードは正確ですか? [こちらで SPF レコードの確認ができます][1]。
-
-      - メールサーバの IP アドレスが[こちらのブラックリストに掲載されていないこと][4]を確認してください。
-
-      - メールサーバが HELO メッセージにおいて、DNS が解決する fully-qualified hostname を*確実に*送信していることを確認してください。送信されていない場合、多くのメールサービスによってメールが拒否される可能性があります。
-
-      - メールソフトウェアの [DKIM email key signing][3]を設定して、DNS レコードに public DKIM キーを追記してください。これは必須ではありませんが、メール到達性を大きく改善します。
-
-      (*簡単な*方法は[Mandrillへのサインアップ][6]です。小さなフォーラムであればカバー可能な無料のメールプランを提供しています。この場合も SPF と DKIM レコードを DNS に設定する必要がある点には注意してください!)
-
-      このメールを受信し、到達性テストに成功することを祈ります!
-
-      Good luck,
-
-      Your friends at [Discourse](http://www.discourse.org)
-
-      :smile:
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/SuperTool.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [6]: http://mandrill.com
-
-      ----
-
-      <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
   system_messages:
     post_hidden:
       subject_template: "コミュニティによるフラグによりポストが非表示になりました"
@@ -784,26 +715,6 @@ ja:
         それではお楽しみください!
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
-      text_body_template: |
-        T%{site_name}への招待の受理、ありがとうございます!
-
-        あなた用のユーザ名 **%{username}** を自動的に作成いたしました。ユーザ名は、[ユーザプロファイル][prefs]ページでいつでも変更することができます。
-
-        再度ログインするには、以下のいずれかの方法をとってください:
-
-        1. Facebook, Google, Twitter, その他サポートされているサービスのアカウントを使ってログイン。ただし、**招待メールを受けたメールアドレスと一致**している必要があります。
-
-        2. %{site_name} on [ユーザプロファイル][prefs]ページにて、%{site_name}用のユニークなパスワードを作成の上、これを使ってログイン。
-
-        %{site_password}
-
-        %{new_user_tips}
-
-        マナーをお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。
-
-        それではお楽しみください!
-
-        [prefs]: %{user_preferences_url}
     export_succeeded:
       subject_template: "エクスポートが正しく完了しました"
       text_body_template: "エクスポートに成功しました。"
@@ -824,22 +735,6 @@ ja:
         Hello,
 
         このメールは、スタッフメンバーによりあなたのアカウントがブロックされたことをお知らせする %{site_name} からの自動メッセージです。
-    user_automatically_blocked:
-      subject_template: "フラグによる新規ユーザr %{username} のブロック"
-      text_body_template: |
-        このメールは、複数のユーザにより %{username} のポストにフラグが立てられた結果、新規ユーザ [%{username}](%{user_url}) が自動的にブロックされたことをお知らせする自動メッセージです。
-
-        [立てられたフラグの確認をしてください](/admin/flags)。もし %{username} が不正にブロックされている場合は、[このユーザの管理ページ](%{user_url}) にてブロック解除ボタンをクリックしてください。
-
-        なお、しきい値はサイト設定の `block_new_user` で変更可能です。
-    spam_post_blocked:
-      subject_template: "同一リンクの連続投稿による新規ユーザ %{username} のブロック"
-      text_body_template: |
-        このメールは、%{domains} へのリンクを含む複数のポストを新規ユーザ [%{username}](%{user_url}) が作成しようとしたため SPAM 防止策としてブロックしたことをお知らせする自動メッセージです。
-
-        詳しくは [このユーザの情報](%{user_url}) を参照してください。
-
-        なお、しきい値はサイト設定の `newuser_spam_host_threshold` で変更可能です。
     unblocked:
       subject_template: "アカウントのブロック解除"
       text_body_template: |
@@ -952,10 +847,6 @@ ja:
     access_token_problem: "管理者に通知: サイト設定を更新して正しい discourse_org_access_key を設定してください。"
   page_not_found:
     title: "リクエストしたページは存在しないかモデレータによって削除されました。"
-    popular_topics: "人気のトピック"
-    recent_topics: "最近のトピック"
-    see_more: "もっと読む"
-    search_title: "このトピックを検索"
     search_google: "Google で検索"
   login_required:
     welcome_message: |
@@ -978,4 +869,3 @@ ja:
       size_not_found: "申し訳ありませんが、画像のサイズを判定できませんでした。画像が壊れているかもしれません。"
   flag_reason:
     sockpuppet: "新規ユーザがトピックを作成し、同じ IP アドレスより別の新規ユーザが回答を投稿しました。サイトの flag_sockpuppets 設定を確認してください。"
-    spam_hosts: "このユーザは同一ドメインへのリンクを含むポストを複数作成しようとしました。サイトの newuser_spam_host_threshold 設定を確認してください。"

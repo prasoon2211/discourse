@@ -5,7 +5,7 @@ require_dependency 'distributed_memoizer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :expand_embed]
+  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :expand_embed, :markdown, :raw, :cooked]
 
   skip_before_filter :store_incoming_links, only: [:short_link]
   skip_before_filter :check_xhr, only: [:markdown,:short_link]
@@ -17,6 +17,11 @@ class PostsController < ApplicationController
     else
       raise Discourse::NotFound
     end
+  end
+
+  def cooked
+    post = find_post_from_params
+    render json: {cooked: post.cooked}
   end
 
   def short_link
@@ -120,14 +125,6 @@ class PostsController < ApplicationController
   def by_number
     post = find_post_from_params_by_number
     display_post(post)
-  end
-
-  def remove_bookmark_by_number
-    if current_user
-      post = find_post_from_params_by_number
-      PostAction.remove_act(current_user, post, PostActionType.types[:bookmark])
-    end
-    render nothing: true
   end
 
   def reply_history

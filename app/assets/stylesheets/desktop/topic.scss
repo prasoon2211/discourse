@@ -27,11 +27,11 @@
   #edit-title { width: 500px; }
   .category-combobox {
     width: 250px;
-    .chzn-drop {
+    .select2-drop {
       left: -9000px;
       width: 248px;
     }
-    .chzn-search input {
+    .select2-search input {
       width: 198px;
     }
   }
@@ -41,24 +41,75 @@
     line-height: 1.2em;
     overflow: hidden;
     a {color: $primary;}
-    a.badge-category { vertical-align: top; margin-top: 4px; }
+    a.badge-category {
+      float: left;
+      vertical-align: top;
+      margin-top: 2px;
+      margin-right: 5px;
+      }
     a.edit-topic { font-size: 15px; position: absolute; margin-left: 8px; }
   }
   .topic-statuses {
     margin-top: -2px;
-    .fa-thumb-tack { padding-left: 3px;
- }
 
   }
-  .chzn-container { vertical-align: middle; }
+  .select2-container {
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-bottom: 2px;
+  }
   .private-message-glyph { display: none; }
 }
 
-.private-message-glyph { color: scale-color($primary, $lightness: 75%); }
+.private-message-glyph {
+  color: scale-color($primary, $lightness: 75%);
+  float: left;
+  margin: 0 5px 0 0;  
+  }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
+a.reply-new {
+  position: absolute;
+  margin-top: -2px;
+  color: scale-color($primary, $lightness: 50%);
+  i {
+    margin-right: 5px;
+    background: $secondary;
+    border: 1px solid scale-color-diff();
+    padding: 1.5px 3px;
+    border-radius: 20px;
+    transition: linear 0.15s;
+    -webkit-transition: linear 0.15s;
+  }
+}
+
+a:hover.reply-new {
+  color: $tertiary;
+  i {
+    background: scale-color($tertiary, $lightness: 75%);
+    border: 1px solid $tertiary;
+  }
+}
+
+.topic-error {
+  padding: 18px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 24px;
+  text-align: center;
+  line-height: 1.1em;
+
+  .topic-retry {
+    display: block;
+    margin-top: 28px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 #topic-closing-info {
-  border-top: 1px solid scale-color($primary, $lightness: 90%);
+  border-top: 1px solid scale-color-diff();
   padding-top: 10px;
   height: 20px;
 }
@@ -70,30 +121,49 @@
   bottom: 0;
   z-index: 500;
   outline: 1px solid transparent;
-}
-
-.reply-new {
-  i {
-    font-size: 12px;
-    margin-right: 5px;
-    background: $secondary;
-    border: 1px solid scale-color($primary, $lightness: 90%);
-    padding: 2px 4px;
-    border-radius: 20px;
-    transition: linear 0.15s;
-    -webkit-transition: linear 0.15s;
+  &.docked {
+    position: absolute;
+    bottom: -70px;
   }
 }
 
-a.reply-new {
-  position: absolute;
-  color: scale-color($primary, $lightness: 50%);
-  margin-top: -2px;}
-a:hover.reply-new {
-  color: $tertiary;
-  i {background: scale-color($tertiary, $lightness: 75%);
-    border: 1px solid $tertiary;
-    padding: 2px 4px;
+#topic-progress-expanded {
+  border: 1px solid scale-color-diff();
+  padding: 5px;
+  background: $secondary;
+  @include box-shadow(0 0px 2px rgba($primary, .2));
+
+  position: relative;
+  left: 345px;
+  width: 118px;
+  padding: 5px;
+
+  button.full {
+    width: 100%;
+    margin-bottom: 5px;
+    i {
+      display: block;
+      margin-top: 2px;
+      margin-bottom: 2px;
+      font-size: 18px;
+    }
+  }
+  .jump-form {
+    input[type="text"] {
+      float: left;
+      width: 45px;
+      height: 20px;
+      text-align: center;
+      margin-bottom: 0;
+      font-size: 16px;
+    }
+    button.btn {
+      float: right;
+      width: 55px;
+    }
+  }
+  button.btn.jump-bottom {
+    margin: 5px 0 0 0;
   }
 }
 
@@ -104,11 +174,17 @@ a:hover.reply-new {
     display: none;
   }
   border: none;
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: scale-color-diff();
   color: scale-color($primary, $lightness: 50%);
   width: 130px;
   height: 34px;
 
+  /* as a big ol' click target, don't let text inside be selected */
+  @include unselectable;
+
+  &:hover {
+    cursor: pointer;
+  }
   .nums {
     position: relative;
     top: 9px;
@@ -116,32 +192,11 @@ a:hover.reply-new {
     text-align: center;
     z-index: 1;
   }
-  button {
-    padding: 3px 1px 0 0;
-    cursor: pointer;
-    z-index: 1000;
+  i.fa {
     position: absolute;
-    top: 2px;
-    left: 4px;
-    border: 0;
-    background: none;
-    color: scale-color($primary, $lightness: 50%);
-    width: 50%;
-    text-align: left;
-    height: 30px;
-    margin: 0;
-    i {
-      font-size: 18px;
-    }
-    &:nth-of-type(2) {
-      right: 4px;
-      left: auto;
-      text-align: right;
-    }
-    &:disabled {
-    cursor: default;
-    color: scale-color($primary, $lightness: 50%);
-    }
+    right: 8px;
+    bottom: 9px;
+    z-index: 1;
   }
   h4 {
     display: inline;
@@ -153,16 +208,10 @@ a:hover.reply-new {
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid  scale-color($primary, $lightness: 90%);
+    border-right: 1px solid  scale-color-diff();
     background-color:  scale-color($success, $lightness: 70%);
     transition: width .75s;
   }
-}
-
-#topic-progress-wrapper.docked {
-  position: absolute;
-  bottom: -70px;
-
 }
 
 #suggested-topics .topic-statuses .topic-status {
@@ -170,6 +219,10 @@ a:hover.reply-new {
   i {
     font-size:15px;
   }
+}
+
+#suggested-topics .topics {
+  padding-bottom: 15px;
 }
 
 .heatmap-high {color: scale-color($danger, $lightness: 20%) !important;}
@@ -190,8 +243,8 @@ a:hover.reply-new {
 
 /* Code, KBD, Sub/sup formatting */
 
-code,kbd,pre,samp{
-  font-family:monospace, serif; font-size:1em;
+code,kbd,pre,samp {
+  font-size:1em;
 }
 pre {
   code {
@@ -199,7 +252,7 @@ pre {
   display: block;
   padding: 5px 10px;
   color: $primary;
-  background: scale-color($primary, $lightness: 90%);
+  background: scale-color-diff();
   max-height: 500px;
   }
 }
@@ -215,7 +268,7 @@ sup{top:-0.5em; }
 sub{bottom:-0.25em; }
 figure{margin:0; }
 fieldset{
-  border:1px solid scale-color($primary, $lightness: 90%);
+  border:1px solid scale-color-diff();
   margin:0 2px;
   padding:0.35em 0.625em 0.75em;
 }
@@ -227,7 +280,7 @@ legend{
 kbd
 {
     background-color: $secondary;
-    border:1px solid scale-color($primary, $lightness: 90%);
+    border:1px solid scale-color-diff();
     border-radius: 3px;
     box-shadow: 0 1px 0 rgba($primary, .9);
     color: $primary;

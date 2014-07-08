@@ -13,7 +13,12 @@ Discourse.BadgesIndexRoute = Discourse.Route.extend({
         return Discourse.Badge.createFromJson(json);
       });
     } else {
-      return Discourse.Badge.findAll();
+      return Discourse.Badge.findAll({onlyListable: true});
     }
+  },
+
+  setupController: function(controller, model) {
+    controller.set('model', model);
+    Discourse.set('title', I18n.t('badges.title'));
   }
 });

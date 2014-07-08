@@ -27,7 +27,8 @@ class TopicUser < ActiveRecord::Base
         :created_post,
         :auto_watch,
         :auto_watch_category,
-        :auto_mute_category
+        :auto_mute_category,
+        :auto_track_category
       )
     end
 
@@ -111,6 +112,13 @@ class TopicUser < ActiveRecord::Base
           observe_after_save_callbacks_for topic_id, user_id
         end
       end
+
+      if attrs[:notification_level]
+        MessageBus.publish("/topic/#{topic_id}",
+                         {notification_level_change: attrs[:notification_level]}, user_ids: [user_id])
+      end
+
+
     rescue ActiveRecord::RecordNotUnique
       # In case of a race condition to insert, do nothing
     end
@@ -209,6 +217,8 @@ class TopicUser < ActiveRecord::Base
                                    FROM topic_users AS ftu
                                    WHERE ftu.user_id = :user_id and ftu.topic_id = :topic_id)",
                   args)
+
+        MessageBus.publish("/topic/#{topic_id}", {notification_level_change: args[:new_status]}, user_ids: [user.id])
       end
     end
 
@@ -279,5 +289,5 @@ end
 #
 # Indexes
 #
-#  index_forum_thread_users_on_forum_thread_id_and_user_id  (topic_id,user_id) UNIQUE
+#  index_topic_users_on_topic_id_and_user_id  (topic_id,user_id) UNIQUE
 #

@@ -2,6 +2,7 @@
 
 /* @import "mobile/*"; TODO: get this working again */
 
+@import "mobile/alert";
 @import "mobile/compose";
 @import "mobile/discourse";
 @import "mobile/faqs";
@@ -18,3 +19,4 @@
 
 @import "plugins";
 @import "plugins_mobile";
+@import "category_backgrounds";

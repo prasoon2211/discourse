@@ -43,23 +43,8 @@
     display: none;
   }
 
-  #profile-background-preview {
-    height: 270px;
-
-    background-position: center center;
-    background-size: cover;
-
-    background-color: $primary;
-  }
-
-  #profile-background-controls {
-    padding: 10px;
-  }
-
   .static {
     color: $primary;
-    margin-top: 5px;
-    margin-left: 5px;
     display: inline-block;
   }
   .instructions {
@@ -84,7 +69,6 @@
   }
 
   .other .controls {
-    margin-top: 10px;
     select {
       width: 280px;
     }
@@ -118,6 +102,12 @@
 
   table.group-members {
     width: 100%;
+    p {
+      max-width: 600px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     th.seen {
       text-align: right;
     }
@@ -138,7 +128,7 @@
   .user-content {
     padding: 10px 8px;
     background-color: $secondary;
-    border: 1px solid scale-color($primary, $lightness: 90%);
+    border: 1px solid scale-color-diff();
     margin-bottom: 10px;
 
     .btn.right {
@@ -155,13 +145,13 @@
 
       th {
         text-align: left;
-        border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+        border-bottom: 1px solid scale-color-diff();
         padding: 5px;
       }
 
       td {
         padding: 5px;
-        border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+        border-bottom: 1px solid scale-color-diff();
       }
     }
   }
@@ -191,6 +181,10 @@
         margin-bottom: 6px;
         font-weight: normal;
         margin-top: 5px;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       a[href] {
@@ -206,9 +200,9 @@
       }
 
       .primary {
-        margin-top: 20px;
+        position: relative;
         float: left;
-        width: 65%;
+        width: 71%;
         color: $secondary;
         text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
 
@@ -217,12 +211,17 @@
         .bio {
           color: $secondary;
           text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
+          max-height: 300px;
+          overflow: auto;
 
           a[href] {
             color: $secondary;
             text-decoration: underline;
             text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
+          }
 
+          img {
+            max-width: 100%;
           }
         }
 
@@ -236,7 +235,6 @@
         max-width: 165px;
 
         dd {
-          color: rgba($secondary, .7);
           margin: 0 0 7px 0;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -263,6 +261,10 @@
   .about.collapsed-info {
     .controls {
       margin-top: 0;
+    }
+
+    .staff-counters {
+      display: none;
     }
 
     .details {
@@ -317,7 +319,7 @@
     .item {
       padding: 20px 8px 15px 8px;
       background-color: $secondary;
-      border-bottom: 1px solid scale-color($primary, $lightness: 90%);
+      border-bottom: 1px solid scale-color-diff();
     }
     .type {
       color: $primary;
@@ -334,11 +336,23 @@
     }
     .avatar-link {
       float: left;
-      margin-right: 10px;
+      margin-right: 4px;
     }
     .title {
       display: block;
       font-size: 14px;
+      max-width: 80%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .name {
+      display: block;
+      font-size: 14px;
+      max-width: 400px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .edit-reason {
       background-color: scale-color($highlight, $lightness: 25%);
@@ -348,5 +362,35 @@
       float: right;
       margin-top: -4px;
     }
+  }
+
+  .staff-counters {
+    text-align: left;
+    position: absolute;
+    > div {
+      margin-bottom: 10px;
+    }
+  }
+
+  .pill {
+    border-radius: 15px;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
+  }
+  .helpful-flags {
+    background-color: green;
+  }
+  .flagged-posts {
+    background-color: #E49735;
+  }
+  .deleted-posts {
+    background-color: #EC441B;
+  }
+  .suspensions {
+    background-color: #c22020;
   }
 }

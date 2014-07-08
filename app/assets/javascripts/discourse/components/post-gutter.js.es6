@@ -1,7 +1,7 @@
 var MAX_SHOWN = 5;
 
 export default Em.Component.extend({
-  classNameBindings: [':span5', ':gutter'],
+  classNameBindings: [':gutter'],
 
   // Roll up links to avoid duplicates
   collapsed: function() {
@@ -38,7 +38,10 @@ export default Em.Component.extend({
 
         buffer.push("<li><a href='" + Em.get(l, 'url') + "' class='track-link'>");
         buffer.push("<i class='fa fa-arrow-" + direction + "'></i>");
-        buffer.push(Em.get(l, 'title'));
+        var title = Em.get(l, 'title');
+        if (!Em.isEmpty(title)) {
+          buffer.push(Handlebars.Utils.escapeExpression(title));
+        }
         if (clicks) {
           buffer.push("<span class='badge badge-notification clicks'>" + clicks + "</span>");
         }

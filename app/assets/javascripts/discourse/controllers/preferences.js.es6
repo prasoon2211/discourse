@@ -22,10 +22,9 @@ export default Discourse.ObjectController.extend({
 
   saveDisabled: function() {
     if (this.get('saving')) return true;
-    if (Discourse.SiteSettings.enable_names && this.blank('newNameInput')) return true;
     if (this.blank('email')) return true;
     return false;
-  }.property('saving', 'newNameInput', 'email'),
+  }.property('saving', 'email'),
 
   cannotDeleteAccount: Em.computed.not('can_delete_account'),
   deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
@@ -67,7 +66,10 @@ export default Discourse.ObjectController.extend({
     return this.get('saving') ? I18n.t('saving') : I18n.t('save');
   }.property('saving'),
 
+  imageUploadUrl: Discourse.computed.url('username', '/users/%@/preferences/user_image'),
+
   actions: {
+
     save: function() {
       var self = this;
       this.setProperties({ saving: true, saved: false });

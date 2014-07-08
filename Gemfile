@@ -116,9 +116,6 @@ gem 'email_reply_parser-discourse', require: 'email_reply_parser'
 #
 # Sam: held back, getting weird errors in latest
 gem 'image_optim', '0.9.1'
-# note: for image_sorcery to correctly work you need
-# sudo apt-get install -y imagemagick
-gem 'image_sorcery'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
@@ -129,9 +126,11 @@ gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-github'
 gem 'omniauth-oauth2', require: false
+gem 'omniauth-google-oauth2'
 gem 'oj'
 # while resolving https://groups.google.com/forum/#!topic/ruby-pg/5_ylGmog1S4
 gem 'pg', '0.15.1'
+gem 'pry-rails', require: false
 gem 'rake'
 
 
@@ -141,8 +140,8 @@ gem 'sanitize'
 gem 'sass'
 gem 'sidekiq'
 
+# for sidekiq web
 gem 'sinatra', require: nil
-gem 'slim'  # required for sidekiq-web
 
 gem 'therubyracer'
 gem 'thin', require: false
@@ -176,7 +175,6 @@ group :test, :development do
   gem 'simplecov', require: false
   gem 'timecop'
   gem 'rspec-given'
-  gem 'pry-rails'
   gem 'pry-nav'
   gem 'spork-rails'
 end
@@ -201,6 +199,8 @@ gem 'fast_blank' #, github: "SamSaffron/fast_blank"
 # this provides a very efficient lru cache
 gem 'lru_redux'
 
+gem 'htmlentities', require: false
+
 # IMPORTANT: mini profiler monkey patches, so it better be required last
 #  If you want to amend mini profiler to do the monkey patches in the railstie
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
@@ -223,9 +223,9 @@ gem 'gctools', require: false, platform: :mri_21
 gem 'stackprof', require: false, platform: :mri_21
 gem 'memory_profiler', require: false, platform: :mri_21
 
-# This silly path comment just makes it easier for me to do dev
-# will be removed in a few weeks
-gem 'logster'#, path: '../logster'
+gem 'rmmseg-cpp', require: false
+
+gem 'logster'
 
 # perftools only works on 1.9 atm
 group :profile do

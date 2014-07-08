@@ -1,13 +1,66 @@
 require 'spec_helper'
-require_dependency 'boost_trust_level'
 
 describe BadgeGranter do
 
   let(:badge) { Fabricate(:badge) }
   let(:user) { Fabricate(:user) }
 
-  before do
-    SiteSetting.enable_badges = true
+  describe 'backfill' do
+
+    it 'has no broken badge queries' do
+      Badge.all.each do |b|
+        BadgeGranter.backfill(b)
+      end
+    end
+
+    it 'can backfill the welcome badge' do
+      post = Fabricate(:post)
+      user2 = Fabricate(:user)
+      PostAction.act(user2, post, PostActionType.types[:like])
+
+      UserBadge.destroy_all
+      BadgeGranter.backfill(Badge.find(Badge::Welcome))
+      BadgeGranter.backfill(Badge.find(Badge::PayingItForward))
+
+      b = UserBadge.find_by(user_id: post.user_id)
+      b.post_id.should == post.id
+      b.badge_id = Badge::Welcome
+
+      b = UserBadge.find_by(user_id: user2.id)
+      b.post_id.should == post.id
+      b.badge_id = Badge::PayingItForward
+    end
+
+    it 'should grant missing badges' do
+      post = Fabricate(:post, like_count: 30)
+      2.times {
+        BadgeGranter.backfill(Badge.find(Badge::NicePost))
+        BadgeGranter.backfill(Badge.find(Badge::GoodPost))
+      }
+
+      # TODO add welcome
+      post.user.user_badges.pluck(:badge_id).sort.should == [Badge::NicePost,Badge::GoodPost]
+
+      post.user.notifications.count.should == 2
+
+      Badge.find(Badge::NicePost).grant_count.should == 1
+      Badge.find(Badge::GoodPost).grant_count.should == 1
+    end
+  end
+
+  describe 'autobiographer' do
+    it 'grants autobiographer correctly' do
+      user = Fabricate(:user)
+      user.user_profile.bio_raw = "I filled my bio"
+      user.user_profile.save!
+
+      Badge.find(Badge::Autobiographer).grant_count.should == 0
+
+      user.uploaded_avatar_id = 100
+      user.save
+
+      Badge.find(Badge::Autobiographer).grant_count.should == 1
+    end
   end
 
   describe 'grant' do
@@ -73,14 +126,39 @@ describe BadgeGranter do
 
   context "update_badges" do
     let(:user) { Fabricate(:user) }
-    let(:logger) { StaffActionLogger.new(Fabricate(:admin)) }
+    let(:liker) { Fabricate(:user) }
 
     it "grants and revokes trust level badges" do
       user.change_trust_level!(:elder)
       UserBadge.where(user_id: user.id, badge_id: Badge.trust_level_badge_ids).count.should eq(4)
-      BoostTrustLevel.new(user: user, level: 1, logger: logger).save!
+      user.change_trust_level!(:basic)
       UserBadge.where(user_id: user.id, badge_id: 1).first.should_not be_nil
       UserBadge.where(user_id: user.id, badge_id: 2).first.should be_nil
+    end
+
+    it "grants system like badges" do
+      post = create_post(user: user)
+      # Welcome badge
+      PostAction.act(liker, post, PostActionType.types[:like])
+      UserBadge.find_by(user_id: user.id, badge_id: 5).should_not be_nil
+      # Nice post badge
+      post.update_attributes like_count: 10
+      BadgeGranter.update_badges(action: :post_like, post_id: post.id)
+      BadgeGranter.update_badges(action: :post_like, post_id: post.id)
+      UserBadge.find_by(user_id: user.id, badge_id: 6).should_not be_nil
+      UserBadge.where(user_id: user.id, badge_id: 6).count.should == 1
+      # Good post badge
+      post.update_attributes like_count: 25
+      BadgeGranter.update_badges(action: :post_like, post_id: post.id)
+      UserBadge.find_by(user_id: user.id, badge_id: 7).should_not be_nil
+      # Great post badge
+      post.update_attributes like_count: 50
+      BadgeGranter.update_badges(action: :post_like, post_id: post.id)
+      UserBadge.find_by(user_id: user.id, badge_id: 8).should_not be_nil
+      # Revoke badges on unlike
+      post.update_attributes like_count: 49
+      BadgeGranter.update_badges(action: :post_like, post_id: post.id)
+      UserBadge.find_by(user_id: user.id, badge_id: 8).should be_nil
     end
   end
 

@@ -183,6 +183,7 @@ class TopicView
   end
 
   def read?(post_number)
+    return true unless @user
     read_posts_set.include?(post_number)
   end
 
@@ -206,7 +207,7 @@ class TopicView
   end
 
   def all_post_actions
-    @all_post_actions ||= PostAction.counts_for(posts, @user)
+    @all_post_actions ||= PostAction.counts_for(@posts, @user)
   end
 
   def links
@@ -276,7 +277,7 @@ class TopicView
 
   def filter_posts_by_ids(post_ids)
     # TODO: Sort might be off
-    @posts = Post.where(id: post_ids)
+    @posts = Post.where(id: post_ids, topic_id: @topic.id)
                  .includes(:user)
                  .includes(:reply_to_user)
                  .order('sort_order')
@@ -306,6 +307,7 @@ class TopicView
   def unfiltered_posts
     result = @topic.posts
     result = result.with_deleted if @user.try(:staff?)
+    result = @topic.posts.where("user_id IS NOT NULL") if @exclude_deleted_users
     result
   end
 

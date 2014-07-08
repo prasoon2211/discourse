@@ -20,8 +20,15 @@
   h1 {
     font-size: 1.5em;
     margin:0;
-    a.edit-topic {font-size: 15px;}
-    a {color: $primary;}
+    a.edit-topic {
+      // let's not even bother with inline title and category edits on mobile
+      // use the full editor instead
+      visibility: hidden;
+    }
+    a {
+      color: $primary;
+      vertical-align: middle;
+    }
   }
   .private-message-glyph { display: none; }
 }
@@ -56,19 +63,61 @@
   outline: 1px solid transparent;
 }
 
+#topic-progress-expanded {
+  border: 1px solid scale-color-diff();
+  padding: 5px;
+  background: $secondary;
+  @include box-shadow(0 0px 2px rgba($primary, .2));
+
+  position: absolute;
+  bottom: 34px;
+  width: 118px;
+  padding: 5px;
+
+  button.full {
+    width: 100%;
+    margin-bottom: 5px;
+    i {
+      display: block;
+      margin-top: 2px;
+      margin-bottom: 2px;
+      font-size: 18px;
+    }
+  }
+  .jump-form {
+    input[type="text"] {
+      float: left;
+      width: 45px;
+      height: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+    button.btn {
+      float: right !important;
+      width: 55px;
+    }
+  }
+  button.btn.jump-bottom {
+    margin-top: 5px;
+    margin-bottom: 0;
+  }
+}
+
 #topic-progress {
-
   box-shadow: 0 0 3px rbga($primary, .7);
-
   position: relative;
   &.hidden {
     display: none;
   }
   border: none;
-  background-color: scale-color($primary, $lightness: 90%);
+  background-color: scale-color-diff();
   color: $primary;
   width: 130px;
   height: 34px;
+
+  /* as a big ol' click target, don't let text inside be selected */
+  @include unselectable;
+
   .nums {
     position: relative;
     top: 9px;
@@ -76,39 +125,16 @@
     text-align: center;
     z-index: 1;
   }
-  button {
-    padding: 0 1px;
-    cursor: pointer;
-    z-index: 1000;
-    position: absolute;
-    top: 8px;
-    left: 4px;
-    border: 0;
-    background: none;
-    color: scale-color($primary, $lightness: 50%);
-
-    width: 60px;
-    text-align: left;
-    i {
-      font-size: 18px;
-    }
-    &:nth-of-type(2) {
-      right: 4px;
-      left: auto;
-      text-align: right;
-    }
-
-
-    &:disabled {
-
-      cursor: default;
-    color: scale-color($primary, $lightness: 50%);
-    }
-  }
   h4 {
     display: inline;
     font-size: 18px;
     line-height: 15px;
+  }
+  i.fa {
+    position: absolute;
+    right: 8px;
+    bottom: 9px;
+    z-index: 1;
   }
   .bg {
     position: absolute;
@@ -117,6 +143,22 @@
     width: 0;
     border-right: 1px solid scale-color($success, $lightness: 50%);
     background-color: scale-color($success, $lightness: 50%);
+  }
+}
+
+.topic-error {
+  padding: 18px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 24px;
+  line-height: 1.1em;
+
+  .topic-retry {
+    display: block;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
